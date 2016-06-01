@@ -1,6 +1,6 @@
 Name     : coreos-cloudinit
 Version  : 1.9.3
-Release  : 1
+Release  : 2
 URL      : https://github.com/coreos/coreos-cloudinit/archive/v1.9.3.tar.gz
 Source0  : https://github.com/coreos/coreos-cloudinit/archive/v1.9.3.tar.gz
 Summary  : No detailed summary available
@@ -32,7 +32,6 @@ mkdir -p src/github.com/coreos
 ln -s ../../../ src/github.com/coreos/coreos-cloudinit
 go build -v -x ./...
 
-
 %install
 export GOROOT="/usr/lib/golang"
 export GOPATH="%{buildroot}/usr/lib/golang:$(pwd)"
@@ -41,6 +40,11 @@ mkdir -p "%{buildroot}%{_bindir}"
 go install -x -v ./
 
 mv %{buildroot}%{_bindir}/coreos-cloudinit-%{version} %{buildroot}%{_bindir}/coreos-cloudinit
+
+%check
+export GOROOT="/usr/lib/golang"
+export GOPATH="%{buildroot}/usr/lib/golang:$(pwd)"
+go test -x -v ./
 
 %files
 
