@@ -1,0 +1,15 @@
+diff --git a/build b/build
+index 36865af..58a0fdc 100755
+--- a/build
++++ b/build
+@@ -3,8 +3,8 @@
+ NAME="coreos-cloudinit"
+ ORG_PATH="github.com/coreos"
+ REPO_PATH="${ORG_PATH}/${NAME}"
+-VERSION=$(git describe --dirty --tags)
+-GLDFLAGS="-X main.version \"${VERSION}\""
++VERSION=##VERSION##
++GLDFLAGS="-X main.version=\"${VERSION}\""
+ 
+ if [ ! -h gopath/src/${REPO_PATH} ]; then
+ 	mkdir -p gopath/src/${ORG_PATH}

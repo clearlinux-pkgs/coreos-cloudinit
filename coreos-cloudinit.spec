@@ -1,8 +1,8 @@
 Name     : coreos-cloudinit
-Version  : 1.9.3
-Release  : 3
-URL      : https://github.com/coreos/coreos-cloudinit/archive/v1.9.3.tar.gz
-Source0  : https://github.com/coreos/coreos-cloudinit/archive/v1.9.3.tar.gz
+Version  : 1.11.0
+Release  : 4
+URL      : https://github.com/coreos/coreos-cloudinit/archive/v1.11.0.tar.gz
+Source0  : https://github.com/coreos/coreos-cloudinit/archive/v1.11.0.tar.gz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : Apache-2.0 BSD-2-Clause BSD-3-Clause GPL-3.0 LGPL-3.0 MIT
@@ -11,6 +11,8 @@ requires : coreos-cloudinit-bin
 Requires : coreos-cloudinit-config
 
 BuildRequires : go
+
+Patch1:   fix-build.patch
 
 %description
 minimal support for parsing OVF environment
@@ -32,23 +34,15 @@ config components for the coreos-cloudinit package.
 
 %prep
 %setup -q
+%patch1 -p1
 
 %build
-export GOROOT="/usr/lib/golang"
-export GOPATH="%{buildroot}/usr/lib/golang:$(pwd)"
-cp -R Godeps/_workspace/src src
-mkdir -p src/github.com/coreos
-ln -s ../../../ src/github.com/coreos/coreos-cloudinit
-go build -v -x ./...
+sed -e s/\#\#VERSION\#\#/%{version}/ -i build
+./build
 
 %install
-export GOROOT="/usr/lib/golang"
-export GOPATH="%{buildroot}/usr/lib/golang:$(pwd)"
-export GOBIN="%{buildroot}%{_bindir}"
 mkdir -p "%{buildroot}%{_bindir}"
-go install -x -v ./
-
-mv %{buildroot}%{_bindir}/coreos-cloudinit-%{version} %{buildroot}%{_bindir}/coreos-cloudinit
+mv bin/coreos-cloudinit %{buildroot}%{_bindir}/coreos-cloudinit
 
 # units
 mkdir -p %{buildroot}/usr/lib/systemd/system
@@ -77,9 +71,8 @@ ln -sf ../user-config.target \
 	%{buildroot}/usr/lib/systemd/system/default.target.wants/user-config.target
 
 %check
-export GOROOT="/usr/lib/golang"
-export GOPATH="%{buildroot}/usr/lib/golang:$(pwd)"
-go test -x -v ./
+export GOPATH=${PWD}/gopath
+go test -v github.com/coreos/coreos-cloudinit
 
 %files
 
