@@ -1,6 +1,6 @@
 Name     : coreos-cloudinit
 Version  : 1.11.0
-Release  : 4
+Release  : 5
 URL      : https://github.com/coreos/coreos-cloudinit/archive/v1.11.0.tar.gz
 Source0  : https://github.com/coreos/coreos-cloudinit/archive/v1.11.0.tar.gz
 Summary  : No detailed summary available
